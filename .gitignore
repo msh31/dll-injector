@@ -1,0 +1,54 @@
+# Ignore Visual Studio user-specific files
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+
+# Build directories and output
+**/x64/
+**/Release/
+**/Debug/
+**/ipch/
+**/*.obj
+**/*.iobj
+**/*.log
+**/*.pdb
+**/*.ipdb
+**/*.tlog/
+**/*.lastbuildstate
+**/*.exe
+**/*.dll
+**/*.lib
+**/*.exp
+**/*.cache
+**/*.ilk
+**/*.recipe
+
+# CMake / Make artifacts (if used)
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# Malware-specific and analysis-related
+*.bin
+*.dmp
+*.pcap
+*.csv
+*.json
+*.html
+
+# Temp files and junk
+*.tmp
+*.bak
+*.swp
+*~
+
+# Compiled scripts / Python tools
+__pycache__/
+*.pyc
+
+# Other
+.vs/*
+*.txt
+builds/*
