@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\builds\rel</OutDir>
+    <OutDir>..\builds\rel\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\builds\dbg</OutDir>
+    <OutDir>..\builds\dbg\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="handle_wrapper.hpp" />
     <ClInclude Include="injection_manager.hpp" />
     <ClInclude Include="injector.hpp" />
     <ClInclude Include="process_hollowing.hpp" />
