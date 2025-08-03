@@ -47,7 +47,43 @@ std::wstring injector::stringToWString(const std::string& str) {
 
 bool injector::injectDLL(DWORD processID, std::string pathToDLL)
 {
-    //TODO: Implement this
+    HANDLE hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_VM_READ | PROCESS_VM_WRITE | PROCESS_VM_OPERATION, FALSE, processID);
+    if (hProcess == NULL) {
+        return false;
+    }
 
-    return false;
+    SIZE_T dllPathSize = pathToDLL.length() + 1;
+    LPVOID allocatedMemory = VirtualAllocEx(hProcess, NULL, dllPathSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+
+    if (allocatedMemory == NULL) {
+        CloseHandle(hProcess);
+        return false;
+    }
+
+    if (!WriteProcessMemory(hProcess, allocatedMemory, pathToDLL.c_str(), dllPathSize, NULL)) {
+        VirtualFreeEx(hProcess, allocatedMemory, 0, MEM_RELEASE);
+        CloseHandle(hProcess);
+        return false;
+    }
+
+    FARPROC loadLibraryAddr = GetProcAddress(GetModuleHandleW(L"kernel32.dll"), "LoadLibraryA");
+    if (!loadLibraryAddr) {
+        VirtualFreeEx(hProcess, allocatedMemory, 0, MEM_RELEASE);
+        CloseHandle(hProcess);
+        return false;
+    }
+
+    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)loadLibraryAddr, allocatedMemory, 0, NULL);
+    if (hThread == NULL) {
+        VirtualFreeEx(hProcess, allocatedMemory, 0, MEM_RELEASE);
+        CloseHandle(hProcess);
+        return false;
+    }
+
+    WaitForSingleObject(hThread, INFINITE);
+    CloseHandle(hThread);
+    VirtualFreeEx(hProcess, allocatedMemory, 0, MEM_RELEASE);
+    CloseHandle(hProcess);
+
+    return true;
 }
